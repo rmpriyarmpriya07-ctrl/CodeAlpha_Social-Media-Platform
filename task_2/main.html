@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialHub - Mini Social Media Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffd200 0%, #f7931e 50%, #ff6b6b 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            color: #333;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-section {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: white;
+        }
+
+        .welcome-section h2 {
+            color: #ff8c00;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #333;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+        }
+
+        .auth-form {
+            max-width: 400px;
+            margin: 2rem auto;
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 3px solid #ffd700;
+        }
+
+        .auth-form h3 {
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #545b62;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .features {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 15px;
+            border: 2px solid #ffd700;
+        }
+
+        .features h3 {
+            color: #ff8c00;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #ffd700;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .main-content {
+            display: none;
+            padding: 2rem;
+        }
+
+        .user-info {
+            background: linear-gradient(135deg, #fff9c4 0%, #ffeaa7 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 3px solid #ffd700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-info::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+            border: 4px solid #fff;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .nav-tab {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-size: 1rem;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .nav-tab.active {
+            color: #ff8c00;
+            border-bottom-color: #ffd700;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 140, 0, 0.1) 100%);
+        }
+
+        .post-form {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border: 2px solid #e9ecef;
+        }
+
+        .mood-selector {
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .mood-option {
+            background: none;
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .mood-option:hover, .mood-option.selected {
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #333;
+            transform: scale(1.05);
+        }
+
+        .filter-option {
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 0.25rem 0.75rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .filter-option:hover, .filter-option.selected {
+            background: #ffd700;
+            transform: scale(1.05);
+        }
+
+        .daily-challenge {
+            background: linear-gradient(135deg, #ff9a56 0%, #ffad56 100%);
+            color: #333;
+            padding: 1rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            border: 3px solid #ffd700;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .daily-challenge::before {
+            content: '🏆';
+            font-size: 2rem;
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            opacity: 0.3;
+        }
+
+        .streak-counter {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            display: inline-block;
+            font-weight: bold;
+            margin: 0.5rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .trending-hashtag {
+            color: #ff8c00;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            margin: 0.25rem;
+            display: inline-block;
+        }
+
+        .trending-hashtag:hover {
+            color: #ffd700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        .post {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+            margin-right: 1rem;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        .post-info h4 {
+            margin: 0;
+            color: #333;
+        }
+
+        .post-info .timestamp {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .post-mood {
+            font-size: 1.5rem;
+            margin-left: auto;
+        }
+
+        .post-content {
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .action-btn.liked {
+            color: #e91e63;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .achievement-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            color: #333;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 0.25rem;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Page -->
+        <div id="welcome-page">
+            <div class="header">
+                <h1>🌐 SocialHub</h1>
+                <p>Connect, Share, Engage with Yellow Vibes!</p>
+            </div>
+
+            <div class="welcome-section">
+                <h2>Welcome to the Future of Social Media!</h2>
+                <p>Experience social networking like never before with mood tracking, daily challenges, achievements, and vibrant yellow-themed design.</p>
+                
+                <div class="features">
+                    <h3>🌟 Amazing Features</h3>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">😊</div>
+                            <h4>Mood Tracking</h4>
+                            <p>Express your feelings with every post</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🏆</div>
+                            <h4>Daily Challenges</h4>
+                            <p>Complete tasks and build streaks</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎖️</div>
+                            <h4>Achievements</h4>
+                            <p>Unlock badges for your activities</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💛</div>
+                            <h4>Golden Theme</h4>
+                            <p>Beautiful yellow-themed interface</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-buttons">
+                    <button class="btn" onclick="showLoginPage()">🔑 Login</button>
+                    <button class="btn btn-secondary" onclick="showSignupPage()">✨ Sign Up</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="login-page" class="hidden">
+            <div class="header">
+                <h1>🌐 SocialHub</h1>
+                <p>Welcome Back!</p>
+            </div>
+
+            <div class="welcome-section">
+                <a href="#" class="back-btn" onclick="showWelcomePage()">← Back to Welcome</a>
+                
+                <div class="auth-form">
+                    <h3>🔑 Login to Your Account</h3>
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="login-username" placeholder="Enter your username">
+                    </div>
+                    <button class="btn" onclick="login()" style="width: 100%;">Login</button>
+                    
+                    <p style="text-align: center; margin-top: 1rem; color: #666;">
+                        Don't have an account? 
+                        <a href="#" onclick="showSignupPage()" style="color: #ff8c00; text-decoration: none;">Sign up here</a>
+                    </p>
+                    
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 215, 0, 0.1); border-radius: 8px;">
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;"><strong>Demo Accounts:</strong></p>
+                        <p style="font-size: 0.8rem; color: #666;">Try: alice_wonder, bob_builder, or charlie_dev</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signup Page -->
+        <div id="signup-page" class="hidden">
+            <div class="header">
+                <h1>🌐 SocialHub</h1>
+                <p>Join the Community!</p>
+            </div>
+
+            <div class="welcome-section">
+                <a href="#" class="back-btn" onclick="showWelcomePage()">← Back to Welcome</a>
+                
+                <div class="auth-form">
+                    <h3>✨ Create Your Account</h3>
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="signup-username" placeholder="Choose a unique username">
+                    </div>
+                    <div class="form-group">
+                        <label>Display Name:</label>
+                        <input type="text" id="signup-displayname" placeholder="Your display name">
+                    </div>
+                    <div class="form-group">
+                        <label>Bio:</label>
+                        <textarea id="signup-bio" placeholder="Tell us about yourself..." rows="3"></textarea>
+                    </div>
+                    <button class="btn" onclick="signUp()" style="width: 100%;">Create Account</button>
+                    
+                    <p style="text-align: center; margin-top: 1rem; color: #666;">
+                        Already have an account? 
+                        <a href="#" onclick="showLoginPage()" style="color: #ff8c00; text-decoration: none;">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content (Social Media App) -->
+        <div id="main-content" class="main-content">
+            <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>🌐 SocialHub</h1>
+                    <p>Connect, Share, Engage</p>
+                </div>
+                <button class="btn" onclick="logout()" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Logout</button>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('feed')">🏠 Feed</button>
+                <button class="nav-tab" onclick="showTab('profile')">👤 Profile</button>
+                <button class="nav-tab" onclick="showTab('explore')">🔍 Explore</button>
+                <button class="nav-tab" onclick="showTab('challenges')">🏆 Challenges</button>
+            </div>
+
+            <!-- Feed Tab -->
+            <div id="feed-tab" class="tab-content">
+                <!-- Daily Challenge -->
+                <div class="daily-challenge">
+                    <h3>🌟 Daily Challenge</h3>
+                    <p id="daily-challenge-text">Share a post about something that made you smile today!</p>
+                    <div class="streak-counter" id="streak-counter">🔥 0 day streak</div>
+                </div>
+
+                <!-- Post Creation Form -->
+                <div class="post-form">
+                    <h3>What's on your mind?</h3>
+                    
+                    <!-- Mood Selector -->
+                    <div class="mood-selector">
+                        <p><strong>How are you feeling?</strong></p>
+                        <button class="mood-option" data-mood="😊" onclick="selectMood('😊', 'Happy')">😊 Happy</button>
+                        <button class="mood-option" data-mood="😍" onclick="selectMood('😍', 'Excited')">😍 Excited</button>
+                        <button class="mood-option" data-mood="🤔" onclick="selectMood('🤔', 'Thoughtful')">🤔 Thoughtful</button>
+                        <button class="mood-option" data-mood="😴" onclick="selectMood('😴', 'Chill')">😴 Chill</button>
+                        <button class="mood-option" data-mood="💪" onclick="selectMood('💪', 'Motivated')">💪 Motivated</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <textarea id="post-content" placeholder="Share your thoughts... (Use #hashtags to make it trendy!)" rows="3"></textarea>
+                    </div>
+                    
+                    <!-- Photo Filter Options -->
+                    <div class="photo-filter">
+                        <p><strong>Post Style:</strong></p>
+                        <button class="filter-option" onclick="selectFilter('normal')">✨ Normal</button>
+                        <button class="filter-option" onclick="selectFilter('celebration')">🎉 Celebration</button>
+                        <button class="filter-option" onclick="selectFilter('wisdom')">💭 Wisdom</button>
+                        <button class="filter-option" onclick="selectFilter('achievement')">🏆 Achievement</button>
+                    </div>
+                    
+                    <button class="btn" onclick="createPost()">✨ Share Post</button>
+                </div>
+
+                <!-- Trending Hashtags -->
+                <div style="background: rgba(255, 215, 0, 0.1); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+                    <h4>🔥 Trending Now</h4>
+                    <div id="trending-tags">
+                        <a href="#" class="trending-hashtag" onclick="addHashtag('#coding')">#coding</a>
+                        <a href="#" class="trending-hashtag" onclick="addHashtag('#motivation')">#motivation</a>
+                        <a href="#" class="trending-hashtag" onclick="addHashtag('#goodvibes')">#goodvibes</a>
+                        <a href="#" class="trending-hashtag" onclick="addHashtag('#creativity')">#creativity</a>
+                    </div>
+                </div>
+
+                <!-- Posts Container -->
+                <div id="posts-container" class="posts-container"></div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile-tab" class="tab-content hidden">
+                <div class="user-info" id="user-profile">
+                    <!-- User profile will be populated here -->
+                </div>
+                <div id="user-posts" class="posts-container"></div>
+            </div>
+
+            <!-- Explore Tab -->
+            <div id="explore-tab" class="tab-content hidden">
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+                    <h3>🌟 Discover Amazing People</h3>
+                    <div id="users-list"></div>
+                </div>
+            </div>
+
+            <!-- Challenges Tab -->
+            <div id="challenges-tab" class="tab-content hidden">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h2>🏆 Daily Challenges & Achievements</h2>
+                    <p>Complete challenges to earn badges and build streaks!</p>
+                </div>
+                
+                <div class="daily-challenge">
+                    <h3>Today's Challenge</h3>
+                    <p id="challenge-description">Share a motivational quote and tag 3 friends!</p>
+                    <button class="btn" onclick="completeChallenge()" id="challenge-btn">Complete Challenge</button>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 15px; margin-bottom: 2rem; border: 3px solid #ffd700;">
+                    <h3>🎖️ Your Achievements</h3>
+                    <div id="achievements-container">
+                        <!-- Achievements will be populated here -->
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 15px; border: 3px solid #ffd700;">
+                    <h3>📊 Your Stats</h3>
+                    <div id="user-stats" style="display: flex; justify-content: space-around; text-align: center;">
+                        <div class="stat">
+                            <div class="stat-number" id="total-reactions">0</div>
+                            <div class="stat-label">Total Reactions</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="challenges-completed">0</div>
+                            <div class="stat-label">Challenges Done</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" id="trending-posts">0</div>
+                            <div class="stat-label">Trending Posts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // In-memory database
+        let users = {};
+        let posts = [];
+        let currentUser = null;
+        let postIdCounter = 1;
+        let selectedMood = null;
+        let selectedFilter = 'normal';
+        let dailyChallenges = [
+            "Share a post about something that made you smile today!",
+            "Post a motivational quote and tag 3 friends!",
+            "Share your favorite productivity tip!",
+            "Tell us about a book that changed your perspective!",
+            "Share a photo of your workspace!",
+            "Write about someone who inspires you!",
+            "Share your best life hack!"
+        ];
+        let currentChallengeIndex = 0;
+
+        // Achievement system
+        const achievements = {
+            'first_post': { name: 'First Steps', icon: '👶', description: 'Posted your first message!' },
+            'social_butterfly': { name: 'Social Butterfly', icon: '🦋', description: 'Followed 5 users!' },
+            'popular': { name: 'Popular', icon: '⭐', description: 'Got 10 likes on a post!' },
+            'hashtag_master': { name: 'Hashtag Master', icon: '#️⃣', description: 'Used 5 different hashtags!' },
+            'mood_tracker': { name: 'Mood Tracker', icon: '😊', description: 'Posted with 3 different moods!' },
+            'streak_keeper': { name: 'Streak Keeper', icon: '🔥', description: 'Completed 3 daily challenges!' }
+        };
+
+        // Initialize with demo data
+        function initializeData() {
+            users = {
+                'alice_wonder': {
+                    username: 'alice_wonder',
+                    displayName: 'Alice Wonder',
+                    bio: 'Curious explorer of digital worlds 🌟',
+                    followers: ['bob_builder'],
+                    following: ['charlie_dev'],
+                    posts: [],
+                    avatar: 'AW',
+                    achievements: ['first_post'],
+                    streak: 2,
+                    totalReactions: 5,
+                    challengesCompleted: 1,
+                    trendingPosts: 1,
+                    usedMoods: ['😊', '🤔'],
+                    usedHashtags: ['#coding', '#life']
+                },
+                'bob_builder': {
+                    username: 'bob_builder',
+                    displayName: 'Bob Builder',
+                    bio: 'Building dreams one block at a time 🔨',
+                    followers: [],
+                    following: ['alice_wonder'],
+                    posts: [],
+                    avatar: 'BB',
+                    achievements: ['first_post'],
+                    streak: 1,
+                    totalReactions: 3,
+                    challengesCompleted: 0,
+                    trendingPosts: 0,
+                    usedMoods: ['💪'],
+                    usedHashtags: ['#building']
+                },
+                'charlie_dev': {
+                    username: 'charlie_dev',
+                    displayName: 'Charlie Dev',
+                    bio: 'Code enthusiast & coffee lover ☕',
+                    followers: ['alice_wonder'],
+                    following: [],
+                    posts: [],
+                    avatar: 'CD',
+                    achievements: ['first_post', 'hashtag_master'],
+                    streak: 3,
+                    totalReactions: 8,
+                    challengesCompleted: 2,
+                    trendingPosts: 1,
+                    usedMoods: ['🤔', '💪', '😊'],
+                    usedHashtags: ['#coding', '#javascript', '#webdev', '#coffee', '#productivity']
+                }
+            };
+
+            posts = [
+                {
+                    id: 1,
+                    author: 'alice_wonder',
+                    content: 'Just discovered this amazing social platform! The gradient designs are so beautiful 🎨 #design #socialmedia',
+                    timestamp: new Date(Date.now() - 3600000),
+                    likes: ['bob_builder'],
+                    comments: [
+                        { author: 'bob_builder', content: 'Welcome to SocialHub! Great to have you here!', timestamp: new Date(Date.now() - 3000000) }
+                    ],
+                    mood: '😊',
+                    moodText: 'Happy',
+                    filter: 'celebration',
+                    reactions: { '👍': ['bob_builder'], '❤️': [] }
+                },
+                {
+                    id: 2,
+                    author: 'charlie_dev',
+                    content: 'Working on some exciting new features. Stay tuned! 🚀 #coding #javascript #webdev',
+                    timestamp: new Date(Date.now() - 7200000),
+                    likes: ['alice_wonder'],
+                    comments: [],
+                    mood: '💪',
+                    moodText: 'Motivated',
+                    filter: 'achievement',
+                    reactions: { '👍': ['alice_wonder'], '🔥': [] }
+                }
+            ];
+
+            postIdCounter = 3;
+        }
+
+        // Page navigation functions
+        function showWelcomePage() {
+            document.getElementById('welcome-page').classList.remove('hidden');
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('signup-page').classList.add('hidden');
+            document.getElementById('main-content').style.display = 'none';
+        }
+
+        function showLoginPage() {
+            document.getElementById('welcome-page').classList.add('hidden');
+            document.getElementById('login-page').classList.remove('hidden');
+            document.getElementById('signup-page').classList.add('hidden');
+        }
+
+        function showSignupPage() {
+            document.getElementById('welcome-page').classList.add('hidden');
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('signup-page').classList.remove('hidden');
+        }
+
+        // Authentication functions
+        function login() {
+            const username = document.getElementById('login-username').value.trim();
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+
+            if (!users[username]) {
+                alert('User not found. Please sign up first!');
+                return;
+            }
+
+            currentUser = username;
+            showMainContent();
+        }
+
+        function signUp() {
+            const username = document.getElementById('signup-username').value.trim();
+            const displayName = document.getElementById('signup-displayname').value.trim();
+            const bio = document.getElementById('signup-bio').value.trim();
+
+            if (!username || !displayName) {
+                alert('Please fill in username and display name');
+                return;
+            }
+
+            if (users[username]) {
+                alert('Username already exists');
+                return;
+            }
+
+            users[username] = {
+                username: username,
+                displayName: displayName,
+                bio: bio || 'New to SocialHub! 🌟',
+                followers: [],
+                following: [],
+                posts: [],
+                avatar: username.substring(0, 2).toUpperCase(),
+                achievements: [],
+                streak: 0,
+                totalReactions: 0,
+                challengesCompleted: 0,
+                trendingPosts: 0,
+                usedMoods: [],
+                usedHashtags: []
+            };
+
+            currentUser = username;
+            showMainContent();
+        }
+
+        function logout() {
+            currentUser = null;
+            showWelcomePage();
+        }
+
+        function showMainContent() {
+            document.getElementById('welcome-page').classList.add('hidden');
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('signup-page').classList.add('hidden');
+            document.getElementById('main-content').style.display = 'block';
+            
+            updateDailyChallenge();
+            renderFeed();
+            renderProfile();
+            renderExplore();
+            renderChallenges();
+        }
+
+        // Tab navigation
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+            event.target.classList.add('active');
+            
+            if (tabName === 'profile') {
+                renderUserPosts();
+            } else if (tabName === 'challenges') {
+                renderChallenges();
+            }
+        }
+
+        // Mood and filter selection
+        function selectMood(emoji, text) {
+            selectedMood = { emoji, text };
+            document.querySelectorAll('.mood-option').forEach(btn => btn.classList.remove('selected'));
+            document.querySelector(`[data-mood="${emoji}"]`).classList.add('selected');
+        }
+
+        function selectFilter(filterType) {
+            selectedFilter = filterType;
+            document.querySelectorAll('.filter-option').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        function addHashtag(hashtag) {
+            const textarea = document.getElementById('post-content');
+            const currentText = textarea.value;
+            
+            if (!currentText.includes(hashtag)) {
+                textarea.value = currentText + (currentText ? ' ' : '') + hashtag;
+                textarea.focus();
+            }
+        }
+
+        function updateDailyChallenge() {
+            const challengeText = dailyChallenges[currentChallengeIndex];
+            document.getElementById('daily-challenge-text').textContent = challengeText;
+            document.getElementById('challenge-description').textContent = challengeText;
+            
+            const user = users[currentUser];
+            document.getElementById('streak-counter').textContent = `🔥 ${user.streak} day streak`;
+        }
+
+        // Post creation
+        function createPost() {
+            const content = document.getElementById('post-content').value.trim();
+            if (!content) {
+                alert('Please write something!');
+                return;
+            }
+
+            const newPost = {
+                id: postIdCounter++,
+                author: currentUser,
+                content: content,
+                timestamp: new Date(),
+                likes: [],
+                comments: [],
+                mood: selectedMood ? selectedMood.emoji : '😊',
+                moodText: selectedMood ? selectedMood.text : 'Happy',
+                filter: selectedFilter,
+                reactions: { '👍': [], '❤️': [], '😂': [], '😮': [], '😢': [], '😡': [] }
+            };
+
+            posts.unshift(newPost);
+            users[currentUser].posts.unshift(newPost.id);
+            
+            // Update user stats
+            const user = users[currentUser];
+            if (selectedMood && !user.usedMoods.includes(selectedMood.emoji)) {
+                user.usedMoods.push(selectedMood.emoji);
+            }
+            
+            // Extract hashtags
+            const hashtags = content.match(/#\w+/g);
+            if (hashtags) {
+                hashtags.forEach(tag => {
+                    if (!user.usedHashtags.includes(tag)) {
+                        user.usedHashtags.push(tag);
+                    }
+                });
+            }
+            
+            checkAchievements();
+            
+            document.getElementById('post-content').value = '';
+            selectedMood = null;
+            selectedFilter = 'normal';
+            
+            document.querySelectorAll('.mood-option').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.filter-option').forEach(btn => btn.classList.remove('selected'));
+            
+            renderFeed();
+            renderProfile();
+        }
+
+        // Render functions
+        function renderFeed() {
+            const container = document.getElementById('posts-container');
+            container.innerHTML = '';
+
+            const feedPosts = posts.filter(post => 
+                post.author === currentUser || 
+                users[currentUser].following.includes(post.author)
+            );
+
+            if (feedPosts.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No posts to show. Follow some users to see their posts!</p>';
+                return;
+            }
+
+            feedPosts.forEach(post => {
+                const postElement = createPostElement(post);
+                container.appendChild(postElement);
+            });
+        }
+
+        function renderProfile() {
+            const user = users[currentUser];
+            const profileContainer = document.getElementById('user-profile');
+            
+            const badgesHtml = user.achievements.length > 0 ? 
+                user.achievements.map(achId => {
+                    const ach = achievements[achId];
+                    return `<span class="achievement-badge">${ach.icon} ${ach.name}</span>`;
+                }).join('') : '<p style="color: #666;">Complete challenges to earn badges!</p>';
+            
+            profileContainer.innerHTML = `
+                <div class="user-avatar">${user.avatar}</div>
+                <h2>${user.displayName}</h2>
+                <p style="margin: 0.5rem 0; color: #666;">@${user.username}</p>
+                <p style="margin: 1rem 0; position: relative; z-index: 1;">${user.bio}</p>
+                <div style="margin: 1rem 0; position: relative; z-index: 1;">
+                    ${badgesHtml}
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number">${user.posts.length}</div>
+                        <div class="stat-label">Posts</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">${user.followers.length}</div>
+                        <div class="stat-label">Followers</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">${user.following.length}</div>
+                        <div class="stat-label">Following</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">${user.streak}</div>
+                        <div class="stat-label">🔥 Streak</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderUserPosts() {
+            const container = document.getElementById('user-posts');
+            container.innerHTML = '';
+            
+            const userPosts = posts.filter(post => post.author === currentUser);
+            
+            if (userPosts.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">You haven\'t posted anything yet!</p>';
+                return;
+            }
+            
+            userPosts.forEach(post => {
+                const postElement = createPostElement(post);
+                container.appendChild(postElement);
+            });
+        }
+
+        function renderExplore() {
+            const container = document.getElementById('users-list');
+            container.innerHTML = '';
+
+            Object.values(users).forEach(user => {
+                if (user.username === currentUser) return;
+
+                const isFollowing = users[currentUser].following.includes(user.username);
+                const userDiv = document.createElement('div');
+                userDiv.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e9ecef;';
+                userDiv.innerHTML = `
+                    <div>
+                        <strong>${user.displayName}</strong>
+                        <div style="color: #666; font-size: 0.9rem;">@${user.username}</div>
+                        <div style="color: #999; font-size: 0.8rem; margin-top: 0.25rem;">${user.bio}</div>
+                    </div>
+                    <button class="btn ${isFollowing ? 'btn-secondary' : ''}" 
+                            onclick="toggleFollow('${user.username}')" 
+                            style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                        ${isFollowing ? 'Following' : 'Follow'}
+                    </button>
+                `;
+                container.appendChild(userDiv);
+            });
+        }
+
+        function createPostElement(post) {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post';
+            
+            const author = users[post.author];
+            const isLiked = post.likes.includes(currentUser);
+            
+            // Apply filter styling
+            let filterStyle = '';
+            switch (post.filter) {
+                case 'celebration':
+                    filterStyle = 'background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 183, 71, 0.1) 100%); border: 2px solid #ffd700; border-radius: 10px; padding: 1rem;';
+                    break;
+                case 'wisdom':
+                    filterStyle = 'background: linear-gradient(135deg, rgba(147, 197, 253, 0.1) 0%, rgba(196, 181, 253, 0.1) 100%); border: 2px solid #a78bfa; border-radius: 10px; padding: 1rem;';
+                    break;
+                case 'achievement':
+                    filterStyle = 'background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%); border: 2px solid #10b981; border-radius: 10px; padding: 1rem;';
+                    break;
+            }
+            
+            postDiv.innerHTML = `
+                <div class="post-header">
+                    <div class="post-avatar">${author.avatar}</div>
+                    <div class="post-info">
+                        <h4>${author.displayName}</h4>
+                        <div class="timestamp">@${author.username} • ${formatTimestamp(post.timestamp)}</div>
+                    </div>
+                    ${post.mood ? `<div class="post-mood" title="Feeling ${post.moodText}">${post.mood}</div>` : ''}
+                </div>
+                <div class="post-content" style="${filterStyle}">${processHashtags(post.content)}</div>
+                <div class="post-actions">
+                    <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                        ❤️ ${post.likes.length}
+                    </button>
+                    <button class="action-btn" onclick="toggleComments(${post.id})">
+                        💬 ${post.comments.length}
+                    </button>
+                    <button class="action-btn" onclick="addReaction(${post.id}, '👍')">
+                        👍 React
+                    </button>
+                </div>
+                <div class="comments-section" id="comments-${post.id}" style="display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e9ecef;">
+                    <div class="comments-list">
+                        ${post.comments.map(comment => `
+                            <div style="background: #f8f9fa; padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                                <div style="font-weight: bold; color: #333; margin-bottom: 0.25rem;">${users[comment.author].displayName}</div>
+                                <div>${comment.content}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <input type="text" id="comment-input-${post.id}" placeholder="Write a comment..." style="flex: 1; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px;">
+                        <button class="btn btn-secondary" onclick="addComment(${post.id})" style="padding: 0.5rem 1rem;">Reply</button>
+                    </div>
+                </div>
+            `;
+            
+            return postDiv;
+        }
+
+        // Interaction functions
+        function toggleLike(postId) {
+            const post = posts.find(p => p.id === postId);
+            const likeIndex = post.likes.indexOf(currentUser);
+            
+            if (likeIndex === -1) {
+                post.likes.push(currentUser);
+            } else {
+                post.likes.splice(likeIndex, 1);
+            }
+            
+            renderFeed();
+            if (!document.getElementById('profile-tab').classList.contains('hidden')) {
+                renderUserPosts();
+            }
+        }
+
+        function toggleComments(postId) {
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const content = input.value.trim();
+            
+            if (!content) return;
+            
+            const post = posts.find(p => p.id === postId);
+            post.comments.push({
+                author: currentUser,
+                content: content,
+                timestamp: new Date()
+            });
+            
+            input.value = '';
+            renderFeed();
+            if (!document.getElementById('profile-tab').classList.contains('hidden')) {
+                renderUserPosts();
+            }
+        }
+
+        function addReaction(postId, emoji) {
+            const post = posts.find(p => p.id === postId);
+            
+            if (!post.reactions[emoji].includes(currentUser)) {
+                post.reactions[emoji].push(currentUser);
+                users[currentUser].totalReactions++;
+            }
+            
+            renderFeed();
+            if (!document.getElementById('profile-tab').classList.contains('hidden')) {
+                renderUserPosts();
+            }
+        }
+
+        function toggleFollow(username) {
+            const followingIndex = users[currentUser].following.indexOf(username);
+            const followerIndex = users[username].followers.indexOf(currentUser);
+            
+            if (followingIndex === -1) {
+                users[currentUser].following.push(username);
+                users[username].followers.push(currentUser);
+            } else {
+                users[currentUser].following.splice(followingIndex, 1);
+                users[username].followers.splice(followerIndex, 1);
+            }
+            
+            renderExplore();
+            renderProfile();
+            renderFeed();
+            checkAchievements();
+        }
+
+        // Utility functions
+        function processHashtags(content) {
+            return content.replace(/#(\w+)/g, '<span style="color: #ff8c00; font-weight: bold;">#$1</span>');
+        }
+
+        function checkAchievements() {
+            const user = users[currentUser];
+            
+            if (user.posts.length === 1 && !user.achievements.includes('first_post')) {
+                user.achievements.push('first_post');
+                showAchievementNotification('first_post');
+            }
+            
+            if (user.following.length >= 5 && !user.achievements.includes('social_butterfly')) {
+                user.achievements.push('social_butterfly');
+                showAchievementNotification('social_butterfly');
+            }
+            
+            if (user.usedHashtags.length >= 5 && !user.achievements.includes('hashtag_master')) {
+                user.achievements.push('hashtag_master');
+                showAchievementNotification('hashtag_master');
+            }
+            
+            if (user.usedMoods.length >= 3 && !user.achievements.includes('mood_tracker')) {
+                user.achievements.push('mood_tracker');
+                showAchievementNotification('mood_tracker');
+            }
+            
+            if (user.challengesCompleted >= 3 && !user.achievements.includes('streak_keeper')) {
+                user.achievements.push('streak_keeper');
+                showAchievementNotification('streak_keeper');
+            }
+        }
+
+        function showAchievementNotification(achievementId) {
+            const achievement = achievements[achievementId];
+            alert(`🎉 Achievement Unlocked!\n${achievement.icon} ${achievement.name}\n${achievement.description}`);
+        }
+
+        function completeChallenge() {
+            const user = users[currentUser];
+            user.challengesCompleted++;
+            user.streak++;
+            
+            document.getElementById('challenge-btn').textContent = 'Completed! ✅';
+            document.getElementById('challenge-btn').disabled = true;
+            document.getElementById('streak-counter').textContent = `🔥 ${user.streak} day streak`;
+            
+            checkAchievements();
+            renderChallenges();
+            
+            setTimeout(() => {
+                currentChallengeIndex = (currentChallengeIndex + 1) % dailyChallenges.length;
+                updateDailyChallenge();
+                document.getElementById('challenge-btn').textContent = 'Complete Challenge';
+                document.getElementById('challenge-btn').disabled = false;
+            }, 3000);
+        }
+
+        function renderChallenges() {
+            const user = users[currentUser];
+            
+            const achievementsContainer = document.getElementById('achievements-container');
+            if (user.achievements.length === 0) {
+                achievementsContainer.innerHTML = '<p style="color: #666; text-align: center;">Complete your first challenge to earn badges!</p>';
+            } else {
+                achievementsContainer.innerHTML = user.achievements.map(achId => {
+                    const ach = achievements[achId];
+                    return `<span class="achievement-badge">${ach.icon} ${ach.name}</span>`;
+                }).join('');
+            }
+            
+            document.getElementById('total-reactions').textContent = user.totalReactions;
+            document.getElementById('challenges-completed').textContent = user.challengesCompleted;
+            document.getElementById('trending-posts').textContent = user.trendingPosts;
+        }
+
+        function formatTimestamp(timestamp) {
+            const now = new Date();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            return `${days}d ago`;
+        }
+
+        // Initialize the app
+        initializeData();
+    </script>
+</body>
+</html>
